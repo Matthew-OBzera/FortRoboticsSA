@@ -111,8 +111,13 @@ namespace FortRoboticsSA.Services.UserService
                     response.Message = "Subway Station not found";
                     return response;
                 }
-
-                user.FreqSubwayStations.Remove(subwayStation);
+                
+                var found = user.FreqSubwayStations.Remove(subwayStation);
+                if (!found)
+                {
+                    response.Success = false;
+                    response.Message = "Subway Station not found in frequently used subway stations";
+                }
                 await _context.SaveChangesAsync();
                 response.Data = user.FreqSubwayStations.Select(s => _mapper.Map<GetSubwayStationDTO>(s)).ToList();
             }
